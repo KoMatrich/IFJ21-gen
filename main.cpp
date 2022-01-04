@@ -22,6 +22,7 @@ namespace mystd {
 	typedef vector<column> table;
 }
 
+//reads csv file and stores data in table
 mystd::table read_csv(string filename, char separator) {
 	mystd::table result;
 	ifstream myFile(filename);
@@ -119,6 +120,8 @@ mystd::table read_csv(string filename, char separator) {
 	return result;
 }
 
+
+//defines used macros from veritas-2D
 void write_head(ofstream* output) {
 	*output << "\n";
 	*output << "#define T(n) (token_type)(T0+n)\n";
@@ -128,6 +131,7 @@ void write_head(ofstream* output) {
 	*output << "\n";
 }
 
+//writes cases of rules
 void  write_switch(ofstream* output, mystd::column column) {
 	//stores epsilon rules
 	vector<int> empty;
@@ -164,6 +168,7 @@ void  write_switch(ofstream* output, mystd::column column) {
 	}
 }
 
+//writes rules
 void write_body(ofstream* output, mystd::table table) {
 	for (auto i = 0; i < table.size(); i++)
 	{
@@ -206,7 +211,7 @@ void write_end(ofstream* output, mystd::table table) {
 	*output << "#undef PUSH\n";
 }
 
-//rewrites names
+//rewrites names to be compatible
 void normalize(string* string) {
 	if (*string == "STRLIT")
 		*string = "string_literal";
@@ -249,8 +254,10 @@ void convert_table(mystd::table* table) {
 	}
 }
 
+
+//debug print / prints output to actual human readable format
 void print_table(ofstream* log_file, mystd::table table) {
-	//with of columns
+	//width of columns
 	vector<size_t> space;
 	//text
 	vector<vector<string>> text;
@@ -295,7 +302,6 @@ void print_table(ofstream* log_file, mystd::table table) {
 	}
 
 	//prints formated table
-	///@note edit formating here
 	for (size_t line_n = 0; line_n < table.at(0).second.size(); line_n++)
 	{
 		*log_file << '#';
@@ -318,12 +324,14 @@ int main(int argc, char** argv) {
 
 	convert_table(&table);
 
+	//reprints table in human readable fomat
 	ofstream log_file(SOURCE_DIR"/out.txt");
 	print_table(&log_file, table);
 	log_file.close();
 
-	table.erase(table.begin(), table.begin() + 2);	//erase head of table and Starting token
-	table.erase(table.begin() + 1);					//erase STRING LITERAL
+	//actual grammar generation
+	table.erase(table.begin(), table.begin() + 2);	//erases head of table and Starting token
+	table.erase(table.begin() + 1);					//erases STRING LITERAL
 
 	ofstream inl_file(SOURCE_DIR"/Grammar.inl");
 	write_head(&inl_file);
