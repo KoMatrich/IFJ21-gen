@@ -1,4 +1,4 @@
-# Generátor kódu pro projekt IFJ a IAL
+# Generátor kódu pro projekt [IFJ](https://github.com/sprtokiller/IFJ21) a IAL
 ## Implementace Generátoru
 
 ### Autoři: 
